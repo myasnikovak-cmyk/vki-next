@@ -2,18 +2,24 @@
 
 import useStudents from '@/hooks/useStudents';
 import type StudentInterface from '@/types/StudentInterface';
+import Student from '../Student/Student';
 
 const Students = (): React.ReactElement => {
-  const { students } = useStudents();
-  console.log("Student Component Log")
-  console.log(students)
+  const { students, deleteStudentMutate } = useStudents();
+
+  const onDeleteHandler = (id: number): void => {
+    deleteStudentMutate(id);
+  }
+  //console.log("Student Component Log")
+  //console.log(students)
   return (
     <div>
-      {students.map((item : StudentInterface) => (
-        <h1 key={item.id}>
-            {item.first_name + ' '} 
-            {item.group_name}
-        </h1>
+      {students.map((student : StudentInterface) => (
+        <Student
+        key={student.id}
+        student={student}
+        onDelete={() => onDeleteHandler(student.id)}
+        />
       ))}
     </div>
      );   
