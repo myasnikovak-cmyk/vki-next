@@ -31,3 +31,24 @@ export const deleteStudentDb = async(id: number): Promise<number> => {
   await db.run(sql);
   return id;
 }
+
+export const addStudentDb = async(student: StudentInterface): Promise<number> => {
+  const db = new sqlite3.Database(process.env.DB ?? './db/vki-web.db');
+
+  const sql = `INSERT INTO student (first_name, middle_name, last_name, groupId) VALUES (?, ?, ?, 1)`;
+  const params = [student.first_name, student.middle_name, student.last_name];
+
+  const insertedId: number = await new Promise((resolve, reject) => {
+    db.run(sql, params, function (err) {
+      if (err) {
+        db.close();
+        return reject(err);
+      }
+
+      resolve(this.lastID);
+      db.close();
+    });
+  });
+
+  return insertedId;
+}
